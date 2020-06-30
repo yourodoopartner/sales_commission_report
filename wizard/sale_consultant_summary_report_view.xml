@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_consultant_summary_report_view_form" model="ir.ui.view">
+        <field name="name">sale.consultant.summary.report.view.form</field>
+        <field name="model">sale.consultant.summary.report</field>
+        <field name="arch" type="xml">
+            <form string="Sale Consultant Summary Report">
+                <group>
+                    <group>
+                        <field name="consultant_id"/>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <field name="to_date"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_report" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_consultant_summary_report_action" model="ir.actions.act_window">
+        <field name="name">Sale Consultant Summary Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.consultant.summary.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sale_consultant_summary_report_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+        <menuitem id="menu_sale_consultant_summary_report"
+            name="Sale Consultant Summary"
+            action="sale_consultant_summary_report_action"
+            parent="sale.menu_sale_report"
+            sequence="1006"/>
+
+</odoo>

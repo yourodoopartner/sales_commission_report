@@ -1,0 +1,136 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="revenue_earned_report_tree_view">
+            <field name="name">Revenue Earned Report</field>
+            <field name="model">sales.commission.line</field>
+            <field name="arch" type="xml">
+                <tree string="Revenue Earned Report List" delete="false" create='false' edit='false'>
+                    <field name="x_studio_client" string="Client"/>
+                    <field name="x_studio_service_purchased" string="Service Purchased"/>
+                    <field name="date" string="Billing Date"/>
+                    <field name="accumulation_total"/>
+                    <field name="amount" string="Amount"/>
+                    <field name="name" string="School Name #order/ *Total Time"/>
+                    <field name="src_order_id" invisible="1"/>
+                    <field name="src_invoice_id" invisible="1"/>
+                    <field name="invoice_date" string="Invoice Date"/>
+                    <field name="amount_total" string="Amount Served"/>
+                    <field name="percentage_rate" string="Percent/Hourly Rate"/>
+                    <field name="amount_earned" string="Amount Earned"/>
+                    <!-- <field name="date" string="Service Fee (2.65%)"/> -->
+                    <field name="amount_earned" string="Revenue Earned"/>
+                    <field name="amount_total" string="Revenue Served"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="revenue_earned_report_search_view">
+            <field name="name">Sales Commission Search</field>
+            <field name="model">sales.commission.line</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="product_id"/>
+                    <field name="sales_team_id"/>
+                    <field name="commission_user_id"/>
+                    <field name="date"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <group string="Group By">
+                        <filter name="by_product_id" string="Product" 
+                                context="{'group_by': 'product_id'}" />
+                        <filter name="by_sales_team_id" string="Sales Team"
+                                context="{'group_by': 'sales_team_id'}"/>
+                        <filter name="by_sales_user_id" string="Sales User"
+                                context="{'group_by': 'commission_user_id'}"/>
+                        <filter name="by_company_id" string="Company"
+                                context="{'group_by': 'company_id'}"/>
+                        <filter name="group_by_date" string="By Month"
+                                context="{'group_by': 'date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="sales_commission_external_user.sales_commission_action">
+            <field name="name">Sales Commission</field>
+            <field name="res_model">sales.commission.line</field>
+            <field name="view_mode">tree,form,graph,dashboard,pivot,kanban</field>
+            <field name="view_id" ref="sales_commission_external_user.sales_commission_tree_view"/>
+            <field name="search_view_id" ref="sales_commission_external_user.sales_commission_search_view"/>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_revenue_earned_report">
+            <field name="name">Revenue Earned Report</field>
+            <field name="res_model">sales.commission.line</field>
+            <field name="view_mode">tree,graph,dashboard,pivot</field>
+            <field name="view_id" ref="revenue_earned_report_tree_view"/>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_group_by_date': 1}</field>
+            <field name="search_view_id" ref="revenue_earned_report_search_view"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_revenue_earned_report_bank">
+            <field name="act_window_id" ref="action_revenue_earned_report"/>
+            <field name="sequence" eval="1005"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="revenue_earned_report_tree_view"/>
+        </record>
+
+        <menuitem id="menu_revenue_earned_report_analysis"
+            name="Revenue Earned Analysis"
+            action="action_revenue_earned_report"
+            parent="sale.menu_sale_report"
+            sequence="1005"/>
+
+        <record model="ir.ui.view" id="sale_consultant_summary_tree_view">
+            <field name="name">Sale Consultant Summary</field>
+            <field name="model">sale.consultant.summary</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Consultant Summary List" delete="false" create='false' edit='false'>
+                    <field name="date_of_month"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="consultant_purchase_ytd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="revenue_served_ytd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="revenue_earned_yrd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="revenue_earned_monthly" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="revenue_earned_monthly" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="free_consultation" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="consultation_monthly_bonus" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="consultation_Bonus_ytd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_consultant_summary_search_view">
+            <field name="name">Sales Commission Summary Search</field>
+            <field name="model">sale.consultant.summary</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="date_of_month"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <group string="Group By">
+                        <filter name="group_by_date_of_month" string="By"
+                                context="{'group_by': 'date_of_month:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_sale_consultant_summary">
+            <field name="name">Sale Consultant Summary</field>
+            <field name="res_model">sale.consultant.summary</field>
+            <field name="view_mode">tree,pivot</field>
+            <field name="view_id" ref="sale_consultant_summary_tree_view"/>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_group_by_date_of_month': 1}</field>
+            <field name="search_view_id" ref="sale_consultant_summary_search_view"/>
+        </record>
+
+<!--         <menuitem id="menu_sale_consultant_summary"
+            name="Sale Consultant Summary Analysis"
+            action="action_sale_consultant_summary"
+            parent="sale.menu_sale_report"
+            sequence="1006"/> -->
+
+    </data>
+</odoo>
