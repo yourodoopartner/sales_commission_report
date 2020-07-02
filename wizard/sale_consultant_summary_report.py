@@ -36,11 +36,12 @@ class SaleConsultantSummaryReport(models.TransientModel):
                 last_fiscal_year = (date_from + relativedelta(months=1)) - timedelta(days=1)
             else:
                 last_fiscal_year = self.to_date
-            sale_order = self.env['sale.order'].search([('date_order', '>=', date_from), ('date_order', '<=', last_fiscal_year), ('user_id.partner_id', '=', self.consultant_id.id)])
+            sale_order = self.env['sale.order'].search([('date_order', '>=', date_from), ('date_order', '<=', last_fiscal_year), ('sale_commission_user_ids.user_id', '=', self.consultant_id.id)])
             print("sale_order >>>>>>>>>>>>>", sale_order)
             consultant_purchase_ytd = sum(sale_order.mapped('amount_total'))
             print("consultant_purchase_ytd >>>>>>>>>>", consultant_purchase_ytd)
-            inv_order = self.env['account.move'].search([('invoice_date', '>=', date_from), ('invoice_date', '<=', last_fiscal_year), ('user_id.partner_id', '=', self.consultant_id.id)])
+            inv_order = self.env['account.move'].search([('invoice_date', '>=', date_from), ('invoice_date', '<=', last_fiscal_year), ('sale_commission_user_ids.user_id', '=', self.consultant_id.id)])
+            print("inv_order >>>>>>>>>>>>>>>>>", inv_order)
             print("inv_order >>>>>>>>>>>>>>>>>>", inv_order)
             revenue_served_ytd = sum(inv_order.mapped('amount_total'))
             print("revenue_served_ytd >>>>>>>>>>>>>>>>", revenue_served_ytd)
