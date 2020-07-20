@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 {
     'name': 'Sales Commission Analysis Reports',
-    'version': '0.1.13',
+    'version': '0.1.14',
     'price': 99.0,
     'currency': 'EUR',
     'category': 'Sales',

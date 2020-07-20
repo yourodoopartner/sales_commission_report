@@ -11,12 +11,10 @@ class SalesCommissionLine(models.Model):
     def _get_percentage_rate(self):
         for line in self:
             if line.src_invoice_id:
-                print("line.src_invoice_id.sale_commission_percentage_ids.mapped('percentage') >>>", line.src_invoice_id.sale_commission_percentage_ids.mapped('percentage'))
                 line.percentage_rate = sum(line.src_invoice_id.sale_commission_percentage_ids.mapped('percentage'))
                 line.amount_earned = line.amount_total/100*line.percentage_rate
             else:
                 if line.src_order_id:
-                    print("line.src_order_id.sale_commission_percentage_ids.mapped('percentage') >>>>>>>>>>>>", line.src_order_id.sale_commission_percentage_ids.mapped('percentage'))
                     line.percentage_rate = sum(line.src_order_id.sale_commission_percentage_ids.mapped('percentage'))
                     line.amount_earned = line.amount_total/100*line.percentage_rate
                 else:
@@ -25,16 +23,12 @@ class SalesCommissionLine(models.Model):
 
     @api.depends('amount')
     def _get_accumulation_total(self):
-        print("_get_accumulation_total >>>>>>>>>", self)
         commission_user_id = self.mapped('commission_user_id')
-        print("commission_user_id >>>>>>>>>>>>>>>>", commission_user_id)
         # for cls in self:
         #     cls.accumulation_total = cls.amount
         for user in commission_user_id:
-            print("user >>>>>>>>>>>>>>>>", user)
             accumulation_amount = 0
             for cls in self.filtered(lambda s: s.commission_user_id == user).sorted(key=lambda s: s.invoice_date):
-                print("cls >>>>>>>>>>>>>>>>>>", cls, cls.amount)
                 accumulation_amount += cls.amount
                 cls.accumulation_total = str(accumulation_amount)
         #         cls.accumulation_total = sum(self.filtered(lambda s: s.commission_user_id == user and cls.invoice_date <= s.invoice_date).mapped('amount'))
